@@ -1,0 +1,141 @@
+/**
+ *AuthorName: Muhammad Zaid Tahir
+ *AuthorEmail: mzaid@nisum.com
+ *Summary : Screenshot utils Page
+ *CreatedDate : Oct-11-2023
+ */
+
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.apache.commons.io.*
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "commons-io:commons-io:2.5"
+	}
+}
+
+task downloadGeckoDriver {
+	def outputFile = file("$buildDir/webdriver/geckodriver.tar.gz")
+	inputs.property("geckodriver", geckoDriverVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		def driverOsFilenamePart
+		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+			driverOsFilenamePart = "win64.zip"
+		} else if (Os.isFamily(Os.FAMILY_MAC)) {
+			driverOsFilenamePart = "macos.tar.gz"
+		} else if (Os.isFamily(Os.FAMILY_UNIX)) {
+			driverOsFilenamePart = "linux64.tar.gz"
+		}
+		FileUtils.copyURLToFile(new URL("https://github.com/mozilla/geckodriver/releases/download/v${geckoDriverVersion}/geckodriver-v${geckoDriverVersion}-${driverOsFilenamePart}"), outputFile)
+	}
+}
+
+task unzipGeckoDriver(type: Copy) {
+	def outputDir = file("$buildDir/webdriver/geckodriver")
+	dependsOn downloadGeckoDriver
+	outputs.dir(outputDir)
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		from(zipTree(downloadGeckoDriver.outputs.files.singleFile))
+		into(outputDir)
+	}
+	else if (Os.isFamily(Os.FAMILY_MAC)) {
+		from(tarTree(downloadGeckoDriver.outputs.files.singleFile))
+		into(outputDir)
+	}
+	else if (Os.isFamily(Os.FAMILY_UNIX)) {
+		from(tarTree(downloadGeckoDriver.outputs.files.singleFile))
+		into(outputDir)
+	}
+
+}
+
+task downloadChromeDriver {
+	def outputFile = file("$buildDir/webdriver/chromedriver.zip")
+	inputs.property("chromeDriverVersion", chromeDriverVersion)
+	inputs.property("chromeDriverVersionForMac", chromeDriverVersionForMac)
+	outputs.file(outputFile)
+
+	doLast {
+		def driverOsFilenamePart
+		version = String.valueOf(chromeDriverVersion)
+		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+			driverOsFilenamePart = "win32"
+			version = "${chromeDriverVersion}"
+		}
+		 else if (Os.isFamily(Os.FAMILY_MAC)) {
+			driverOsFilenamePart = "mac-x64"
+			version = "${chromeDriverVersionForMac}" ?: "${chromeDriverVersion}"
+		} else if (Os.isFamily(Os.FAMILY_UNIX)) {
+			driverOsFilenamePart = Os.isArch("amd64") ? "linux64" : "linux32"
+			version = "${chromeDriverVersion}"
+		}
+		FileUtils.copyURLToFile(new URL("https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$version/${driverOsFilenamePart}/chromedriver-${driverOsFilenamePart}.zip"), outputFile)
+	}
+
+
+}
+
+task unzipChromeDriver(type: Copy) {
+	def driverExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver";
+	def driverOsFilenamePart
+	if(Os.isFamily(Os.FAMILY_MAC)) {
+		driverOsFilenamePart = "mac-x64"
+	}
+	else if(Os.isFamily(Os.FAMILY_UNIX)) {
+		driverOsFilenamePart = Os.isArch("amd64") ? "linux64" : "linux32"
+	}
+	else if(Os.isFamily(Os.FAMILY_WINDOWS)) {
+		driverOsFilenamePart = Os.isArch("amd64") ? "win32" : "win64"
+	}
+	def outputDir = file("$buildDir/webdriver/chromedriver")
+	dependsOn downloadChromeDriver
+	outputs.dir(outputDir)
+	from(zipTree(downloadChromeDriver.outputs.files.singleFile))
+	into(outputDir)
+	File  wd= new File("$buildDir/webdriver/chromedriver/" + driverExecutable)
+	doLast {
+		FileUtils.copyFile(new File("$buildDir/webdriver/chromedriver/chromedriver-${driverOsFilenamePart}/${driverExecutable}"), wd)
+		wd.setExecutable(true)
+	}
+
+}
+
+
+task downloadPhantomJs {
+	def osFilenamePart
+	if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+		osFilenamePart = "windows.zip"
+	} else if (Os.isFamily(Os.FAMILY_MAC)) {
+		osFilenamePart = "macosx.zip"
+	} else if (Os.isFamily(Os.FAMILY_UNIX)) {
+		osFilenamePart = Os.isArch("amd64") ? "linux-x86_64.tar.bz2" : "linux-i686.tar.bz2"
+	}
+
+	def filename = "phantomjs-$phantomJsVersion-$osFilenamePart"
+	def outputFile = file("$buildDir/webdriver/$filename")
+	inputs.property("phantomJsVersion", phantomJsVersion)
+	outputs.file(outputFile)
+
+	doLast {
+		FileUtils.copyURLToFile(new URL("https://bitbucket.org/ariya/phantomjs/downloads/$filename"), outputFile)
+	}
+}
+
+task unzipPhantomJs(type: Copy) {
+	def outputDir = file("$buildDir/webdriver/phantomjs")
+	dependsOn downloadPhantomJs
+	outputs.dir(outputDir)
+
+	def archive = downloadPhantomJs.outputs.files.singleFile
+
+	from(Os.isFamily(Os.FAMILY_MAC) || Os.isFamily(Os.FAMILY_WINDOWS) ? zipTree(archive) : tarTree(archive))
+	into(outputDir)
+	eachFile { FileCopyDetails fcp ->
+		fcp.relativePath = new RelativePath(!fcp.directory, *fcp.relativePath.segments[1..-1])
+	}
+}

@@ -1,0 +1,314 @@
+/**
+ *AuthorName: Muhammad Zaid Tahir
+ *AuthorEmail: mzaid@nisum.com
+ *Summary : Screenshot utils Page
+ *CreatedDate : Oct-11-2023
+ */
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+defaultTasks = ['clean', 'dependencies', 'build']
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+    //maven { url "http://repository.jboss.org/nexus/content/groups/public-jboss" }
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.viswaramamoorthy:gradle-util-plugins:0.1.0-RELEASE"
+        classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.21"
+    }
+}
+
+apply plugin: "com.github.ManifestClasspath"
+apply plugin: "com.github.spacialcircumstances.gradle-cucumber-reporting"
+
+ext {
+    drivers = ["firefox", "ffHeadless", "chrome", "chromeHeadless", "chromeSpoofer","chromeSpooferHeadless", "phantomJs", "safari", "edge", "chromeAndroid","jsChrome"]
+
+    ext {
+        chromeDriverVersionForMac = '118.0.5993.70'
+        chromeDriverVersion = '116.0.5845.96'
+        geckoDriverVersion = '0.27.0'
+        phantomJsVersion = '2.1.1'
+    }
+}
+
+apply from: 'dependencies.gradle'
+apply from: 'browserDriverDownloads.gradle'
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+drivers.each { driver ->
+    task "${driver}CucumberTest"(type: JavaExec) {
+        main = "cucumber.api.cli.Main"
+        //main = "io.cucumber.core.cli.Main"
+        classpath = configurations.cucumberRuntime + sourceSets.test.output
+        /*if(rwdDevice!='iphone')
+        {
+            systemProperty('rwdDevice',rwdDevice)
+        }*/
+        if (cucumberFeature == "features") { //no feature defined on command line
+            if (cucumberTags == "tags") {
+                args = ['-p', 'pretty',
+                        '-p', 'html:target/reports/digital/report',
+                        '-p', 'json:target/reports/digital/result' + System.getProperty('threadName', threadName) + '.json',
+                        '-p', 'junit:target/reports/digital/junit' + System.getProperty('threadName', threadName) + '.xml',
+                        '--glue', 'com/digital/ui/steps', 'src/test/resources/ui/features',
+                        '--glue', 'com/digital/api/steps'
+                ]
+            } else {
+                args = ['-p', 'pretty',
+                        '-p', 'html:target/reports/digital/report',
+                        '-p', 'json:target/reports/digital/result' + System.getProperty('threadName', threadName) + '.json',
+                        '-p', 'junit:target/reports/digital/junit' + System.getProperty('threadName', threadName) + '.xml',
+                        '--glue', 'com/digital/ui/steps', 'src/test/resources/ui/features',
+                        '--glue', 'com/digital/api/steps',
+                        '--tags', cucumberTags
+                ]
+            }
+        } else {
+            if (cucumberTags == "tags") {
+                args = ['-p', 'pretty',
+                        '-p', 'html:target/reports/digital/report',
+                        '-p', 'json:target/reports/digital/result' + System.getProperty('threadName', threadName) + '.json',
+                        '-p', 'junit:target/reports/digital/junit' + System.getProperty('threadName', threadName) + '.xml',
+                        '--glue', 'com/digital/ui/steps', 'src/test/resources/ui/features/' + cucumberFeature,
+                        '--glue', 'com/digital/api/steps'
+                ]
+            } else {
+                args = ['-p', 'pretty',
+                        '-p', 'html:target/reports/digital/report',
+                        '-p', 'json:target/reports/digital/result' + System.getProperty('threadName', threadName) + '.json',
+                        '-p', 'junit:target/reports/digital/junit' + System.getProperty('threadName', threadName) + '.xml',
+                        '--glue', 'com/digital/ui/steps', 'src/test/resources/ui/features/' + cucumberFeature,
+                        '--glue', 'com/digital/api/steps',
+                        '--tags', cucumberTags
+                ]
+            }
+        }
+    }
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
+firefoxCucumberTest {
+    dependsOn unzipGeckoDriver
+    systemProperty "browser", "firefox"
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
+    def geckodriverFile = new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename)
+    systemProperty "webdriver.gecko.driver", geckodriverFile.absolutePath
+}
+
+ffHeadlessCucumberTest {
+    dependsOn unzipGeckoDriver
+    systemProperty "browser", "ffheadless"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    systemProperty "analytics", analytics
+    def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
+    def geckodriverFile = new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename)
+    systemProperty "webdriver.gecko.driver", geckodriverFile.absolutePath
+}
+
+chromeCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chrome"
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "gridExecution", gridExecution
+    systemProperty "storeUrl", storeUrl
+    systemProperty "zipCode", zipCode
+    systemProperty "fulfillmentType", fulfillmentType
+    systemProperty "username", username
+    systemProperty "password", password
+    systemProperty "address", address
+    systemProperty "shopDeliveryNeeded", shopDeliveryNeeded
+    systemProperty "threadName", threadName
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+chromeHeadlessCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chromeheadless"
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "storeUrl", storeUrl
+    systemProperty "zipCode", zipCode
+    systemProperty "fulfillmentType", fulfillmentType
+    systemProperty "username", username
+    systemProperty "password", password
+    systemProperty "address", address
+    systemProperty "shopDeliveryNeeded", shopDeliveryNeeded
+    systemProperty "threadName", threadName
+    systemProperty "gridExecution", gridExecution
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+jsChromeCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "jsChrome"
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "gridExecution", gridExecution
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+phantomJsCucumberTest {
+    dependsOn unzipPhantomJs
+    systemProperty "browser", "headless"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def phantomJsFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "bin/phantomjs.exe" : "bin/phantomjs"
+    systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
+}
+
+safariCucumberTest {
+    systemProperty "browser", "safari"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+}
+
+chromeSpooferCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chromespoofer"
+    systemProperty "rwdDevice", rwdDevice
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+chromeSpooferHeadlessCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chromespooferheadless"
+    systemProperty "rwdDevice", rwdDevice
+    systemProperty "testdata", testdata
+    systemProperty "analytics", analytics
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+chromeAndroidCucumberTest {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chromeandroid"
+    systemProperty "rwdDevice", rwdDevice
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+task cucumberServiceFeature(type: JavaExec) {
+    classpath = configurations.cucumberRuntime + sourceSets.test.output
+    main = "cucumber.api.cli.Main"
+    //main = "io.cucumber.core.cli.Main"
+    args = ['--format', 'html:cucumber-html-report', '-f', 'pretty', '--glue', 'com/digital/services/steps/myteamssteps', 'src/test/resources/services/features/myteamsfeaturesQA']
+}
+
+test {
+    systemProperty "cucumber.options", System.getenv("cucumberTagName")
+}
+
+//javaexec {
+//    main = "cucumber.api.cli.Main"
+//    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+//    args = ['--format', 'html:cucumber-html-report', '-f', 'pretty', '--glue', 'gradle.cucumber', 'src/test/resources']
+//}
+
+tasks.withType(Test) {
+    systemProperties = System.getProperties()
+    //systemProperties.remove("java.endorsed.dirs")
+}
+
+// JUnit
+task parallelChromeCucumberTest(type: Test) {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chrome"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    systemProperty "gridExecution", gridExecution
+    systemProperty "timeout", timeout
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+    include '**/runner/ParallelExecution.class'
+    outputs.upToDateWhen { false }
+}
+
+task parallelChromeHeadlessCucumberTest(type: Test) {
+    dependsOn unzipChromeDriver
+    systemProperty "browser", "chromeheadless"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    systemProperty "gridExecution", gridExecution
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+    include '**/runner/ParallelExecution.class'
+    outputs.upToDateWhen { false }
+}
+
+task parallelFirefoxCucumberTest(type: Test) {
+    dependsOn unzipGeckoDriver
+    systemProperty "browser", "firefox"
+    systemProperty "testdata", testdata
+    systemProperty "a11y.analysis.required", a11yAnalysisRequired
+    def geckodriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "geckodriver.exe" : "geckodriver"
+    def geckodriverFile = new File(unzipGeckoDriver.outputs.files.singleFile, geckodriverFilename)
+    systemProperty "webdriver.gecko.driver", geckodriverFile.absolutePath
+    include '**/runner/ParallelExecution.class'
+    outputs.upToDateWhen { false }
+}
+
+chromeHeadlessCucumberTest.finalizedBy(generateCucumberReports)
+
+cucumberReports {
+    projectNameOverride = "Digital Automation UI"
+    outputDir = file('cucumber-local-reports/')
+    buildId = '1'
+    reports = files({
+        if (new File('target/reports/digital').directorySize() > 0) {
+            new File('target/reports/digital').listFiles(new FilenameFilter() {
+                @Override
+                boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".json")
+                }
+            })
+        }
+    })
+}
+
+dependencies {
+    implementation 'junit:junit:4.13.2'
+    implementation group:  'io.appium', name: 'java-client', version: '7.6.0'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.15'
+    //testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
+}
+
+

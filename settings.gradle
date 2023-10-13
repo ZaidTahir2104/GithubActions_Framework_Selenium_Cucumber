@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo.mongodb.org/maven2/' }  // Add this line for MongoDB
+    }
+}
+
+
+rootProject.name = 'digital'
+
+

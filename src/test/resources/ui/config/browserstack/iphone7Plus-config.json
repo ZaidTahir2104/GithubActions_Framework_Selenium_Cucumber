@@ -1,0 +1,18 @@
+{
+  "server": "hub-cloud.browserstack.com",
+  "user": "zaidtahir",
+  "key": "VkhnrxpoogCu",
+  "capabilities": {
+  	"build": "Safari",
+  	"project": "P1_suite",
+  	"device": "iPhone 7 Plus",
+    "realMobile": "true",
+    "os_version": "10.3",
+    "browserstack.local":"false",
+    "browserstack.debug":"true",
+    "browserName":"Safari",
+    "browserstack.appium_version":"1.7.0",
+    "browserstack.localIdentifier": "iPhone",
+    "browserstack.console": "verbose"
+  }
+} 

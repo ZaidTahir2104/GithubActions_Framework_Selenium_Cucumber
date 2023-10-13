@@ -1,0 +1,81 @@
+name: Github-Pages-RXIS-UIAutomation
+on:
+  workflow_dispatch:
+    inputs:
+      banner:
+        type: choice
+        description: banner
+        required: true
+        options:
+          - Vons
+          - JewelOsco
+          - Pavillions
+          - StarMarket
+          - AcmeMarkets
+          - CarrsQC
+          - TomThumb
+          - Randalls
+          - Shaws
+          - UnitedSuperMarkets
+      environment:
+        type: choice
+        description: environment
+        required: true
+        options:
+          - QA1
+          - QA2
+      application:
+        type: choice
+        description: application
+        required: true
+        options:
+          - CoreScheduler
+          - CareGiver
+          - PetRx
+      test_type:
+        type: choice
+        description: test_type
+        required: true
+        options:
+          - UnifiedFlowSmoke
+          - UnifiedFlowRegression
+          - GCRegression
+          - GCSmoke
+          - GCRegressionNew
+          - B2CB2BSmoke
+          - qsReg
+          - DOB
+  
+jobs:
+  call-ci-workflow:
+    uses: albertsons/esgh-central-workflow-aut/.github/workflows/gradle-automation.yml@v4
+    with:
+      javaVersion: 8
+      args: '-Ptestdata="pharmacy"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}"'
+      test_reports: '**/cucumber-local-reports/cucumber-html-reports/*'
+  publish-githubpages:
+    needs: [call-ci-workflow]
+    if: always()
+    uses: albertsons/esgh-central-workflow-aut/.github/workflows/publish_github_pages.yml@PDS-5518
+    with:
+     repo_name: 'albertsons/RXIS-UIAutomation'
+     FILES: 'ReportArtifacts'
+     publish_files: 'RXIS-UIAutomation.tar.gz'
+     entry_file: 'overview-features.html'
+     run_number: ${{ github.run_number }}
+    secrets:
+       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+  sending-email-cucumber:
+    needs: [publish-githubpages]
+    if: always()
+    uses: albertsons/esgh-central-workflow-aks/.github/workflows/Send_Email_Attachment.yml@v4
+    with:
+      EMAIL_TO: zaidtahir21@outlook.com
+      EMAIL_BODY: 'Please click the link to view the report -> https://pages.github.albertsons.com/albertsons/RXIS-UIAutomation/overview-features.html attached for execution environment ${{ github.event.inputs.environment }} for the Brand ${{ github.event.inputs.banner }} for the tag ${{ github.event.inputs.test_type }} '
+      EMAIL_ATTACHMENT: RXIS-UIAutomation.tar.gz
+      EMAIL_FROM: malvi14@safeway.com
+      FILES: ReportArtifacts
+    secrets:
+       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+       EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+       EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}     
