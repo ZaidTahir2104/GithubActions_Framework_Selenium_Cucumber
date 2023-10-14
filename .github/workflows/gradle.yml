@@ -30,10 +30,10 @@ jobs:
       - name: Send Email
         uses: dawidd6/action-send-mail@v2
         with:
-          server_address: smtp.office365.com  # Outlook SMTP server address
+          server_address: 'smtp.office365.com'  # Outlook SMTP server address
           server_port: 587  # Outlook SMTP port
-          username: ${{ zaidtahir21@outlook.com }}  # Your Outlook email address
-          password: ${{ 3ll5464l47llLL }}  # Your Outlook email password
+          username: '${{ zaidtahir2104}}'  # Your Outlook email address (GitHub secret)
+          password: '${{ 3ll5464l47llLL }}'  # Your Outlook email password (GitHub secret)
           subject: 'Build completed'
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your Outlook email address
