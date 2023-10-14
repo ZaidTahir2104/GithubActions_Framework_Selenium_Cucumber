@@ -30,11 +30,11 @@ jobs:
       - name: Send Email
         uses: dawidd6/action-send-mail@v2
         with:
-          server_address: 'smtp.gmail.com'  # Outlook SMTP server address
+          server_address: 'smtp.office365.com'  # Outlook SMTP server address
           server_port: 587  # Gmail SMTP port
-          username: ${{ secrets.USERNAME }}  # Your gmail email address (GitHub secret)
-          password: ${{ secrets.PASSWORD }}  # Your gmail email password (GitHub secret)
+          username: '${{ secrets.USERNAME }}'  # Your gmail email address (GitHub secret)
+          password: '${{ secrets.PASSWORD }}'  # Your gmail email password (GitHub secret)
           subject: 'Build completed'
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
-          from: 'testingemailuser1993@gmail.com'  # Your gmail email address
+          from: 'zaidtahir21@outlook.com'  # Your gmail email address
           body: 'The build has completed successfully.'
