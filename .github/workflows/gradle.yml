@@ -30,6 +30,13 @@ jobs:
         distribution: 'temurin'
     - name: Build with Gradle
       run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
-
-
+      ending-email-cucumber:
+        needs: [ publish-githubpages ]
+        if: always()
+        with:
+          EMAIL_TO: zaidtahir21@outlook.com
+          EMAIL_BODY: 'Please click the link to view the report -> https://pages.github.albertsons.com/albertsons/RXIS-UIAutomation/overview-features.html attached for execution environment ${{ github.event.inputs.environment }} for the Brand ${{ github.event.inputs.banner }} for the tag ${{ github.event.inputs.test_type }} '
+          EMAIL_ATTACHMENT: RXIS-UIAutomation.tar.gz
+          EMAIL_FROM: zaidtahir21@outlook.com
+          FILES: ReportArtifacts
 
