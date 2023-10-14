@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Email
-        uses: zaid/action-send-mail@v2
+        uses: dawidd6/action-send-mail@v2
         with:
           server_address: 'smtp.office365.com'  # Outlook SMTP server address
           server_port: 587  # Gmail SMTP port
