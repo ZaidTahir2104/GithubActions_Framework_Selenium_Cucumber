@@ -29,6 +29,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      run: gradle build --gradle-version 7.4
+      run: ./gradlew chromeCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
+
 
 
