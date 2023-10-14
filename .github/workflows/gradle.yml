@@ -47,12 +47,7 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
       - name: Build with Gradle
-        call-ci-workflow:
-          with:
-            javaVersion: 8
-            args: '-Ptestdata="myteams"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}"'
-            test_reports: '**/cucumber-local-reports/cucumber-html-reports/*'
-        #run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
+        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
 
   send-email:
     needs: [ build ]
