@@ -32,7 +32,7 @@ on:
 jobs:
   call-ci-workflow:
     # Replace with the appropriate action for your project
-    uses: zaid/GithubActions_Framework_Selenium_Cucumber/actions/checkout@v1
+    uses: zaid/esgh-central-workflow-aut/.github/workflows/gradle-automation.yml@v4
     with:
       javaVersion: 8
       args: '-Ptestdata="myteams"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}"'
