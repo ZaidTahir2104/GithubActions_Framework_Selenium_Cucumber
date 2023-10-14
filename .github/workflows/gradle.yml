@@ -29,6 +29,6 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
     - name: Build with Gradle
-      run: ./gradlew ${{ github.event.inputs.gradle_task }} -Ptestdata=${{ github.event.inputs.testdata }} -PcucumberTags=${{ github.event.inputs.cucumber_tags }} generateCucumberReport
+      run: gradle build --gradle-version 7.4
 
 
