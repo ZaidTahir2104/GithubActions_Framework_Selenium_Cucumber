@@ -1,6 +1,33 @@
-name: Java CI with Gradle
+name: Selenium-Github-Pages
 
 on:
+  workflow_dispatch:
+    inputs:
+      banner:
+        type: choice
+        description: banner
+        required: true
+        options:
+          - Google
+      environment:
+        type: choice
+        description: environment
+        required: true
+        options:
+          - MyTeamsQA
+          - MyTeamsUAT
+      application:
+        type: choice
+        description: application
+        required: true
+        options:
+          - CoreScheduler
+      test_type:
+        type: choice
+        description: test_type
+        required: true
+        options:
+          - DOB1
   push:
     branches: [ "selenium_githubactions" ]
   pull_request:
