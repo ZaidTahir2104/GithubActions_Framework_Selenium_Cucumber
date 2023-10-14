@@ -9,7 +9,6 @@ target/
 ExtentReports/*
 debug.log
 digital.iml
-gradle/*
 axe_response_files/
 .classpath
 .project
