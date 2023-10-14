@@ -39,16 +39,20 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '8'
           distribution: 'temurin'
       - name: Build with Gradle
-        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
+        call-ci-workflow:
+          with:
+            javaVersion: 8
+            args: '-Ptestdata="myteams"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}"'
+            test_reports: '**/cucumber-local-reports/cucumber-html-reports/*'
+        #run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
 
   send-email:
     needs: [ build ]
