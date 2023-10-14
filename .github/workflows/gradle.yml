@@ -36,5 +36,5 @@ jobs:
           password: '${{ secrets.PASSWORD }}'  # Your Outlook email password (GitHub secret)
           subject: 'Build completed'
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
-          from: 'zaidtahir21@outlook.com'  # Your Outlook email address
+          from: 'testingemailuser1993@gmail.com'  # Your Outlook email address
           body: 'The build has completed successfully.'
