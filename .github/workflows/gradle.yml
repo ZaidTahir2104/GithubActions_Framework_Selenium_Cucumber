@@ -64,8 +64,3 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your gmail email address
           body: 'The build has completed successfully.'
-      - name: deploy
-        uses: zaid/github-pages-deploy-action@v4
-        with:
-            folder: build
-            branch: selenium_githubactions
