@@ -47,8 +47,8 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
       - name: Build with Gradle
-        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
-          mkdir cucumber_reports
+        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport |
+          && mkdir cucumber_reports
           cp  cucumber-local-reports/cucumber-html-reports cucumber_reports/
 
   send-email:
