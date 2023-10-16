@@ -48,6 +48,13 @@ jobs:
           distribution: 'temurin'
       - name: Build with Gradle
         run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
+
+      - name: Deploy Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+        branches: selenium_githubactions
+        folder: ./Cucumber
+
   send-email:
     needs: [ build ]
     runs-on: ubuntu-latest
