@@ -14,7 +14,6 @@ axe_response_files/
 .project
 .settings/
 logs/
-cucumber-local-reports/*
 Stores_Data.xlsx
 chromedriver
 
