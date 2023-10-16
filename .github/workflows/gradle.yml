@@ -52,7 +52,7 @@ jobs:
       - name: Deploy Pages
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-        branches: selenium_githubactions
+        branch: selenium_githubactions
         folder: ./Cucumber
 
   send-email:
