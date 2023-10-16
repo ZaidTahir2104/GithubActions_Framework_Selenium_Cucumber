@@ -54,7 +54,11 @@ jobs:
         with:
           branch: selenium_githubactions
           folder: ./Cucumber
-          PERSONAL_ACCESS_TOKEN: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
+          server_address: 'smtp.office365.com'  # Outlook SMTP server address
+          server_port: 587  # Gmail SMTP port
+          username: '${{ secrets.USERNAME }}'  # Your gmail email address (GitHub secret)
+          password: '${{ secrets.PASSWORD }}'  # Your gmail email password (GitHub secret)
+         # PERSONAL_ACCESS_TOKEN: '${{ secrets.PERSONAL_ACCESS_TOKEN }}'
 
   send-email:
     needs: [ build ]
