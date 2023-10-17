@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cucumber-report
-          path: ./Cucumber/reports/cucumber-html-reports/
+          path: ./Test/cucumber-local-reports/cucumber-html-reports
       - name: Print After directory contents before archiving
         run: ls -R
 
