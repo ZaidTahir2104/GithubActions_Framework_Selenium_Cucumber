@@ -50,6 +50,11 @@ jobs:
         run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReports
       - name: Print directory contents after build
         run: ls -R
+      - name: Archive Cucumber Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-report
+          path: .Cucumber/reports/cucumber-html-reports/
 
   send-email:
     needs: [build]
@@ -72,4 +77,4 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: '.Cucumber/reports/cucumber/ExecutionReport.zip'
+          attachments: './cucumber-report'
