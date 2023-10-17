@@ -64,8 +64,7 @@ jobs:
     steps:
         - name: Zip Cucumber Report
           run: |
-            cd cucumber-report
-            zip -r ../cucumber-report.zip .
+            zip -r cucumber-report.zip $(find cucumber-report -type f -name "*")
         - name: Send Email with Cucumber Report
           uses: dawidd6/action-send-mail@v2
           with:
