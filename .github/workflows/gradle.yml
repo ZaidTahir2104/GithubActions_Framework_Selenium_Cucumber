@@ -57,7 +57,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: cucumber-report
-          path: Cucumber/reports/cucumber/
+          path: Cucumber/reports/cucumber/ExecutionReport.html
 
       - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
