@@ -70,4 +70,4 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: '.Cucumber/reports/cucumber/ExecutionReport.html'
+          attachments: '.Cucumber/reports/cucumber/ExecutionReport.zip'
