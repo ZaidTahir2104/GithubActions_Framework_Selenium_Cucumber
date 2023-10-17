@@ -1,0 +1,14 @@
+{
+  "server": "hub-cloud.browserstack.com",
+  "user": "zaidtahir",
+  "key": "VkhnrxpoogCu",
+  "capabilities": {
+    "browserstack.debug": true,
+    "os": "OS X",
+    "os_version": "Mojave",
+    "browser": "Safari",
+    "browser_version": "12",
+    "browserstack.local":"false",
+    "browserstack.localIdentifier": "Safari10.1Mac"
+  }
+}

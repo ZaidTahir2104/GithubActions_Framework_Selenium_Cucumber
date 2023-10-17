@@ -1,0 +1,18 @@
+{
+  "server": "hub-cloud.browserstack.com",
+  "user": "zaidtahir",
+  "key": "VkhnrxpoogCu",
+  "capabilities": {
+  	"build": "Samsung",
+  	"project": "P1_suite",
+  	"device": "Galaxy S8",
+    "realMobile": "true",
+    "os_version": "8.0",
+    "browserstack.local":"false",
+    "browserstack.debug":"true",
+    "browserName":"chrome",
+    "browserstack.appium_version":"1.7.0",
+    "browserstack.localIdentifier": "iPhone",
+    "browserstack.console": "verbose"
+  }
+} 
