@@ -52,15 +52,21 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - name: Send Email
+      - name: Archive Cucumber Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-report
+          path: build/reports/cucumber
+
+      - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
         with:
           server_address: 'smtp.office365.com'  # Outlook SMTP server address
-          server_port: 587  # Gmail SMTP port
-          username: '${{ secrets.USERNAME }}'  # Your gmail email address (GitHub secret)
-          password: '${{ secrets.PASSWORD }}'  # Your gmail email password (GitHub secret)
+          server_port: 587  # SMTP port
+          username: '${{ secrets.USERNAME }}'  # Your email address (GitHub secret)
+          password: '${{ secrets.PASSWORD }}'  # Your email password (GitHub secret)
           subject: 'Cucumber Report - Build completed'
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
-          from: 'zaidtahir21@outlook.com'  # Your gmail email address
+          from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: './build/reports/cucumber/report.html'
+          attachments: './cucumber-report'
