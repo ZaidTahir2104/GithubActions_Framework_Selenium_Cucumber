@@ -48,7 +48,8 @@ jobs:
           distribution: 'temurin'
       - name: Build with Gradle
         run: ./gradlew chromeCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
-          ls -R
+      - name: Print directory contents after build
+        run: ls -R
 
   send-email:
     needs: [build]
