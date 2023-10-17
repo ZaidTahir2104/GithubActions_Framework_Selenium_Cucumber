@@ -69,7 +69,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cucumber-report
-
       - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
         with:
@@ -81,5 +80,5 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: '.cucumber-report'  # Assuming the artifact was downloaded to this path
+          attachments: '**/cucumber-report/*'  # Assuming the artifact was downloaded to this path
 

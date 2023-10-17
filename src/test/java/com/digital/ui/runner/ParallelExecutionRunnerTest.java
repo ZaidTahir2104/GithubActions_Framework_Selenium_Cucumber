@@ -62,7 +62,7 @@ public class ParallelExecutionRunnerTest {
 
         String reportsPath = System.getProperty("user.dir") + File.separator + "target" + File.separator + "reports" + File.separator + "digital";
         CommonUtilities.deleteDirectory(new File(reportsPath));
-        CommonUtilities.deleteDirectory(new File(System.getProperty("user.dir") + File.separator + "cucumber-local-reports"));
+        CommonUtilities.deleteDirectory(new File(System.getProperty("user.dir") + File.separator + "Test/cucumber-local-reports"));
         File extentReportDir = new File(System.getProperty("user.dir") + File.separator + "ExtentReports");
         CommonUtilities.deleteDirectory(extentReportDir);
 
