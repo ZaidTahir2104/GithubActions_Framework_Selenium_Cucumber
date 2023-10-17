@@ -1,60 +1,66 @@
 name: Selenium-Github-Pages
 
-on:
-  workflow_dispatch:
-    inputs:
-      banner:
-        type: choice
-        description: banner
-        required: true
-        options:
-          - Google
-      environment:
-        type: choice
-        description: environment
-        required: true
-        options:
-          - MyTeamsQA
-          - MyTeamsUAT
-      application:
-        type: choice
-        description: application
-        required: true
-        options:
-          - CoreScheduler
-      test_type:
-        type: choice
-        description: test_type
-        required: true
-        options:
-          - DOB1
-  push:
-    branches: ["selenium_githubactions"]
-  pull_request:
-    branches: ["selenium_githubactions"]
-
-permissions:
-  contents: read
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      banner:
+#        type: choice
+#        description: banner
+#        required: true
+#        options:
+#          - Google
+#      environment:
+#        type: choice
+#        description: environment
+#        required: true
+#        options:
+#          - MyTeamsQA
+#          - MyTeamsUAT
+#      application:
+#        type: choice
+#        description: application
+#        required: true
+#        options:
+#          - CoreScheduler
+#      test_type:
+#        type: choice
+#        description: test_type
+#        required: true
+#        options:
+#          - DOB1
+#  push:
+#    branches: ["selenium_githubactions"]
+#  pull_request:
+#    branches: ["selenium_githubactions"]
+#
+#permissions:
+#  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'temurin'
-      - name: Build with Gradle
+
+      - name: Build and Generate Cucumber Report
         run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReports
-      - name: Print directory contents after build
+
+      - name: Print directory contents before archiving
         run: ls -R
+
       - name: Archive Cucumber Report
         uses: actions/upload-artifact@v2
         with:
           name: cucumber-report
-          path: .Cucumber/reports/cucumber-html-reports/
+          path: ./Cucumber/reports/cucumber-html-reports/
+      - name: Print After directory contents before archiving
+        run: ls -R
 
   send-email:
     needs: [build]
@@ -64,6 +70,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: cucumber-report
+
       - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
         with:
@@ -75,4 +82,4 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: './cucumber-report'
+          attachments: './cucumber-report'  # Assuming the artifact was downloaded to this path
