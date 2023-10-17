@@ -59,7 +59,8 @@ jobs:
           server_port: 587  # Gmail SMTP port
           username: '${{ secrets.USERNAME }}'  # Your gmail email address (GitHub secret)
           password: '${{ secrets.PASSWORD }}'  # Your gmail email password (GitHub secret)
-          subject: 'Build completed'
+          subject: 'Cucumber Report - Build completed'
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your gmail email address
           body: 'The build has completed successfully.'
+          attachments: './build/reports/cucumber/report.html'

@@ -1,7 +1,6 @@
 workspace.xml
 reports/
 .gradle/*
-build/*
 .idea/
 bin/
 out/
