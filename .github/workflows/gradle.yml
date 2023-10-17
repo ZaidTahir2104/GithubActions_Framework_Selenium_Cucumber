@@ -81,5 +81,5 @@ jobs:
           to: 'zaidtahir21@outlook.com'  # Recipient's email address
           from: 'zaidtahir21@outlook.com'  # Your email address
           body: 'The build has completed successfully.'
-          attachments: '/home/runner/work/GithubActions_Framework_Selenium_Cucumber/GithubActions_Framework_Selenium_Cucumber/cucumber-report'  # Assuming the artifact was downloaded to this path
+          attachments: '.cucumber-report'  # Assuming the artifact was downloaded to this path
 
