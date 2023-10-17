@@ -62,23 +62,18 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Cucumber Report Artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: cucumber-report
-          path: ./cucumber-report
-      - name: Print After directory contents before archiving
-        run: ls -R
-      - name: Send Email with Cucumber Report
-        uses: dawidd6/action-send-mail@v2
-        with:
-          server_address: 'smtp.office365.com'  # Outlook SMTP server address
-          server_port: 587  # SMTP port
-          username: '${{ secrets.USERNAME }}'  # Your email address (GitHub secret)
-          password: '${{ secrets.PASSWORD }}'  # Your email password (GitHub secret)
-          subject: 'Cucumber Report - Build completed'
-          to: 'zaidtahir21@outlook.com'  # Recipient's email address
-          from: 'zaidtahir21@outlook.com'  # Your email address
-          body: 'The build has completed successfully.'
-          attachments: './cucumber-report'  # Assuming the artifact was downloaded to this path
+        - name: Zip Cucumber Report
+          run: zip -r cucumber-report.zip cucumber-report
+        - name: Send Email with Cucumber Report
+          uses: dawidd6/action-send-mail@v2
+          with:
+            server_address: 'smtp.office365.com'  # Outlook SMTP server address
+            server_port: 587  # SMTP port
+            username: '${{ secrets.USERNAME }}'  # Your email address (GitHub secret)
+            password: '${{ secrets.PASSWORD }}'  # Your email password (GitHub secret)
+            subject: 'Cucumber Report - Build completed'
+            to: 'zaidtahir21@outlook.com'  # Recipient's email address
+            from: 'zaidtahir21@outlook.com'  # Your email address
+            body: 'The build has completed successfully.'
+            attachments: './cucumber-report.zip'  # Assuming the artifact was downloaded to this path
 
