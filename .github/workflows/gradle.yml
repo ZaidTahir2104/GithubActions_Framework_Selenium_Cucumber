@@ -75,5 +75,6 @@ jobs:
             to: 'zaidtahir21@outlook.com'  # Recipient's email address
             from: 'zaidtahir21@outlook.com'  # Your email address
             body: 'The build has completed successfully.'
+            EMAIL_ATTACHMENT: cucumber-report.zip
             attachments: './cucumber-report.zip'  # Assuming the artifact was downloaded to this path
 
