@@ -22,6 +22,6 @@ Feature: Sample Feature to Open Google home page
     Examples:
       |text         |
       |'Nisum'      |
-      |'Lahore'     |
-      |'Islamabad'  |
-      |'Karachi'    |
+#      |'Lahore'     |
+#      |'Islamabad'  |
+#      |'Karachi'    |

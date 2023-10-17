@@ -25,11 +25,11 @@ tools{
      jdk 'jdk8'
  }
 
-  agent { 
+  agent {
    label 'Jenkins_Agent2'
   }
 
-  stages { 
+  stages {
    stage('maven build') {
       steps {
         sh 'chmod +x gradlew'
@@ -56,8 +56,8 @@ tools{
              reportDir: "cucumber-local-reports/cucumber-html-reports",
              reportFiles: 'overview-features.html',
              reportName: "Cucumber Reports"
-          ]) 
-      
+          ])
+
       script {
             def props = readProperties  file: 'build.properties'
             currentBuild.displayName = "#" + "${env.BUILD_NUMBER} -" + branch_name
