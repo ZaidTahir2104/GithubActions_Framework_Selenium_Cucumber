@@ -29,7 +29,6 @@ buildscript {
         classpath "com.github.spacialcircumstances:gradle-cucumber-reporting:0.1.21"
     }
 }
-
 apply plugin: "com.github.ManifestClasspath"
 apply plugin: "com.github.spacialcircumstances.gradle-cucumber-reporting"
 
@@ -248,6 +247,7 @@ tasks.withType(Test) {
     //systemProperties.remove("java.endorsed.dirs")
 }
 
+
 // JUnit
 task parallelChromeCucumberTest(type: Test) {
     dependsOn unzipChromeDriver
@@ -304,11 +304,25 @@ cucumberReports {
     })
 }
 
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            mainClass = 'io.cucumber.core.cli.Main'
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'html:build/reports/cucumber', '--glue', 'your.package.with.step.definitions', 'src/test/resources']
+        }
+    }
+}
+
 dependencies {
     implementation 'junit:junit:4.13.2'
     implementation group:  'io.appium', name: 'java-client', version: '7.6.0'
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.15'
+    implementation 'io.cucumber:cucumber-java:6.10.4'
+    implementation 'io.cucumber:cucumber-junit:6.10.4'
     //testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
 }
+
 
 
