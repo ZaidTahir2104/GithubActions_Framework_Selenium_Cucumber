@@ -1,5 +1,4 @@
 workspace.xml
-reports/
 .gradle/*
 .idea/
 bin/
