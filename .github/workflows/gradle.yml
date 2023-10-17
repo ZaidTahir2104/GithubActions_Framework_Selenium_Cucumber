@@ -47,7 +47,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Build with Gradle
-        run: ./gradlew chromeCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReport
+        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1
       - name: Print directory contents after build
         run: ls -R
 
