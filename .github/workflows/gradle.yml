@@ -52,13 +52,13 @@ jobs:
         run: ls -R
 
       - name: Create a Zip Archive of Cucumber Report
-        run: zip -r cucumber-report.zip ./Test/cucumber-local-reports/cucumber-html-reports/
+        run: zip -r cucumber-report.zip ./Test/cucumber-local-reports/cucumber-html-reports/*
 
       - name: Archive Cucumber Report
         uses: actions/upload-artifact@v2
         with:
           name: cucumber-report
-          path: cucumber-report.zip
+          path: ./cucumber-report.zip
 
 
   send-email:

@@ -1,45 +1,45 @@
-name: Cucumber Report and Email
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  generate_and_send_report:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-
-      - name: Generate Cucumber Report
-        run: ./gradlew generateCucumberReport
-
-      - name: Create a Zip Archive of Cucumber Report
-        run: zip -r cucumber-report.zip ./build/reports/cucumber
-
-      - name: Archive Cucumber Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: cucumber-report
-          path: cucumber-report.zip
-
-      - name: Send Email with Cucumber Report
-        uses: dawidd6/action-send-mail@v2
-        with:
-          server_address: 'smtp.office365.com'
-          server_port: 587
-          username: '${{ secrets.USERNAME }}'
-          password: '${{ secrets.PASSWORD }}'
-          subject: 'Cucumber Report - Build completed'
-          to: 'zaidtahir21@outlook.com'
-          from: 'zaidtahir21@outlook.com'
-          body: 'The build has completed successfully.'
-          attachments: './cucumber-report.zip'
+#name: Cucumber Report and Email
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#jobs:
+#  generate_and_send_report:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '11'
+#          distribution: 'temurin'
+#
+#      - name: Generate Cucumber Report
+#        run: ./gradlew generateCucumberReport
+#
+#      - name: Create a Zip Archive of Cucumber Report
+#        run: zip -r cucumber-report.zip ./build/reports/cucumber
+#
+#      - name: Archive Cucumber Report
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: cucumber-report
+#          path: cucumber-report.zip
+#
+#      - name: Send Email with Cucumber Report
+#        uses: dawidd6/action-send-mail@v2
+#        with:
+#          server_address: 'smtp.office365.com'
+#          server_port: 587
+#          username: '${{ secrets.USERNAME }}'
+#          password: '${{ secrets.PASSWORD }}'
+#          subject: 'Cucumber Report - Build completed'
+#          to: 'zaidtahir21@outlook.com'
+#          from: 'zaidtahir21@outlook.com'
+#          body: 'The build has completed successfully.'
+#          attachments: './cucumber-report.zip'
