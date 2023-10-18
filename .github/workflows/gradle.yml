@@ -76,5 +76,6 @@ jobs:
             to: 'zaidtahir21@outlook.com'  # Recipient's email address
             from: 'zaidtahir21@outlook.com'  # Your email address
             body: 'The build has completed successfully.'
+            run: chmod -R .
             attachments: '.'  # Assuming the artifact was downloaded to this path
 
