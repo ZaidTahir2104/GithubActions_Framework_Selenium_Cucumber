@@ -47,7 +47,7 @@ jobs:
       - name: Create Cucumber Report Directory
         run: mkdir cucumber-report
       - name: Build and Generate Cucumber Report
-        run: '-Ptestdata="pharmacy"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}" generateCucumberReports'
+        run: '-Ptestdata="myTeams"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}" generateCucumberReports'
 
       - name: Print directory contents before archiving
         run: ls -R
