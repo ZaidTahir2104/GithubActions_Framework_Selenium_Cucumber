@@ -20,10 +20,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Generate Cucumber Report
-        run: ./gradlew generateCucumberReport  # Adjust the command based on your project setup
+        run: ./gradlew generateCucumberReport
 
       - name: Create a Zip Archive of Cucumber Report
-        run: zip -r cucumber-report.zip ./Test/cucumber-local-reports/cucumber-html-reports/
+        run: zip -r cucumber-report.zip ./build/reports/cucumber
 
       - name: Archive Cucumber Report
         uses: actions/upload-artifact@v2
@@ -34,12 +34,12 @@ jobs:
       - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
         with:
-          server_address: 'smtp.office365.com'  # Outlook SMTP server address
-          server_port: 587  # SMTP port
-          username: '${{ secrets.USERNAME }}'  # Your email address (GitHub secret)
-          password: '${{ secrets.PASSWORD }}'  # Your email password (GitHub secret)
+          server_address: 'smtp.office365.com'
+          server_port: 587
+          username: '${{ secrets.USERNAME }}'
+          password: '${{ secrets.PASSWORD }}'
           subject: 'Cucumber Report - Build completed'
-          to: 'zaidtahir21@outlook.com'  # Recipient's email address
-          from: 'zaidtahir21@outlook.com'  # Your email address
+          to: 'zaidtahir21@outlook.com'
+          from: 'zaidtahir21@outlook.com'
           body: 'The build has completed successfully.'
           attachments: './cucumber-report.zip'
