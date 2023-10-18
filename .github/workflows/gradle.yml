@@ -63,10 +63,6 @@ jobs:
       - name: Print After directory contents before archiving
         run: ls -R
 
-  send-email:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
       - name: Full Rights
         run: chmod -R 777 .
       - name: Send Email with Cucumber Report
