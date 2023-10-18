@@ -8,14 +8,14 @@ on:
         description: banner
         required: true
         options:
-          - Google
+          - MyTeams
       environment:
         type: choice
         description: environment
         required: true
         options:
-          - MyTeamsQA
-          - MyTeamsUAT
+          - QA
+          - UAT
       application:
         type: choice
         description: application
@@ -47,7 +47,7 @@ jobs:
       - name: Create Cucumber Report Directory
         run: mkdir cucumber-report
       - name: Build and Generate Cucumber Report
-        run: '-Ptestdata="myTeams"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}" generateCucumberReports'
+        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata='myTeams'-'${{ github.event.inputs.banner }}'_'${{ github.event.inputs.environment }}' -PcucumberTags='@${{ github.event.inputs.test_type }}' generateCucumberReports
 
       - name: Print directory contents before archiving
         run: ls -R
