@@ -59,6 +59,8 @@ jobs:
         with:
           name: cucumber-report
           path: ./cucumber-report.zip
+      - name: Print directory contents after archiving
+        run: ls -R
 
 
   send-email:
