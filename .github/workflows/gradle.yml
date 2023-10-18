@@ -47,7 +47,7 @@ jobs:
       - name: Create Cucumber Report Directory
         run: mkdir cucumber-report
       - name: Build and Generate Cucumber Report
-        run: ./gradlew chromeHeadlessCucumberTest -Ptestdata=myteams-MyTeams_QA -PcucumberTags=@DOB1 generateCucumberReports
+        run: '-Ptestdata="pharmacy"-"${{ github.event.inputs.banner }}"_"${{ github.event.inputs.environment }}" -PcucumberTags="@${{ github.event.inputs.test_type }}" generateCucumberReports'
 
       - name: Print directory contents before archiving
         run: ls -R
