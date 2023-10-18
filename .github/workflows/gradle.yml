@@ -28,10 +28,11 @@ on:
         required: true
         options:
           - DOB1
-  push:
-    branches: ["selenium_githubactions"]
-  pull_request:
-    branches: ["selenium_githubactions"]
+          - test
+#  push:
+#    branches: ["selenium_githubactions"]
+#  pull_request:
+#    branches: ["selenium_githubactions"]
 
 jobs:
   build:
