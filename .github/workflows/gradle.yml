@@ -56,8 +56,6 @@ jobs:
         with:
           name: cucumber-report
           path: ./Test/cucumber-local-reports/cucumber-html-reports/
-      - name: Print After directory contents before archiving
-        run: ls -R
 
   send-email:
     needs: [build]
