@@ -1,34 +1,45 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Cucumber Report and Email
 
 on:
   push:
-    branches: [ "selenium_githubactions" ]
-  pull_request:
-    branches: [ "selenium_githubactions" ]
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
-  build:
-
+  generate_and_send_report:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      with:
-        arguments: build
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Generate Cucumber Report
+        run: ./gradlew generateCucumberReport  # Adjust the command based on your project setup
+
+      - name: Create a Zip Archive of Cucumber Report
+        run: zip -r cucumber-report.zip ./Test/cucumber-local-reports/cucumber-html-reports/
+
+      - name: Archive Cucumber Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: cucumber-report
+          path: cucumber-report.zip
+
+      - name: Send Email with Cucumber Report
+        uses: dawidd6/action-send-mail@v2
+        with:
+          server_address: 'smtp.office365.com'  # Outlook SMTP server address
+          server_port: 587  # SMTP port
+          username: '${{ secrets.USERNAME }}'  # Your email address (GitHub secret)
+          password: '${{ secrets.PASSWORD }}'  # Your email password (GitHub secret)
+          subject: 'Cucumber Report - Build completed'
+          to: 'zaidtahir21@outlook.com'  # Recipient's email address
+          from: 'zaidtahir21@outlook.com'  # Your email address
+          body: 'The build has completed successfully.'
+          attachments: './cucumber-report.zip'
