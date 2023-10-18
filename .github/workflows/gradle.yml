@@ -64,7 +64,7 @@ jobs:
         run: ls -R
 
       - name: Full Rights
-        run: chmod -R 777 .
+        run: chmod -R 755 .
       - name: Send Email with Cucumber Report
         uses: dawidd6/action-send-mail@v2
         with:
